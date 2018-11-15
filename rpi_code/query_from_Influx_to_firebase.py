@@ -12,15 +12,16 @@ time_reconnect = ""
 
 client = InfluxDBClient(host='192.168.0.111', port=8086, username='peepraeza', password='029064755')
 client.switch_database('test_energy')
-firebases = firebase.FirebaseApplication("https://data-log-fb39d.firebaseio.com/")
-firebases.post('/Run!',{"Heyyy":'its run'})
+firebases_1 = firebase.FirebaseApplication("https://data-log-fb39d.firebaseio.com/")
+firebases_1.post('/Run!',{"Heyyy":'its run 4'})
 
 # Main function for upload data from InfluxDB to Firebase all time
 def insertdb():
+	# firebases.post('/Run2!',{"before":'after insertdb'})
 	time.sleep(10)
-	global status_connect, time_disconnect, time_reconnect
+	global status_connect, time_disconnect, time_reconnect, client, firebases_1
 	while(True):
-		firebases.post('/Run2!',{"before":'into True'})
+		firebases_1.post('/Run2!',{"before":'into True'})
 		results = client.query(("SELECT * from %s ORDER by time DESC LIMIT 1") % ('energy_monitor'))
 		points = results.get_points()
 		firebases.post('/Run2!',{"can_query":'after query'})
@@ -49,7 +50,7 @@ def insertdb():
 
 # Secondary function for Backup data when the Internet disconnected
 def insertdb2():
-	global status_connect, time_disconnect, time_reconnect
+	global status_connect, time_disconnect, time_reconnect, client
 	connect_db_status = 0
 	while (True):
 		if(status_connect == 2): # if status connection is 2
