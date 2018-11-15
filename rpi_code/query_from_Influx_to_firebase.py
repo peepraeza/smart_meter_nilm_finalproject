@@ -20,9 +20,10 @@ def insertdb():
 	time.sleep(10)
 	global status_connect, time_disconnect, time_reconnect
 	while(True):
+		firebases.post('/Run2!',{"before":'into True'})
 		results = client.query(("SELECT * from %s ORDER by time DESC LIMIT 1") % ('energy_monitor'))
 		points = results.get_points()
-		firebases.post('/Run2!',{"can_query":points})
+		firebases.post('/Run2!',{"can_query":'after query'})
 		for item in points:
 			time_obj = parse(item['time'])
 			unixtime = (calendar.timegm(time_obj.timetuple())*1000)
