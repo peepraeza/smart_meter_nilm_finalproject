@@ -13,32 +13,32 @@ time_reconnect = ""
 # client = InfluxDBClient(host='192.168.0.111', port=8086, username='peepraeza', password='029064755')
 # client.switch_database('test_energy')
 firebases_1 = firebase.FirebaseApplication("https://data-log-fb39d.firebaseio.com/")
-firebases_1.post('/Run!',{"Heyyy":'its run 4'})
+firebases_1.post('/Run4!',{"Heyyy":'its run 4'})
 
 # Main function for upload data from InfluxDB to Firebase all time
 def insertdb():
 	client = InfluxDBClient(host='192.168.0.111', port=8086, username='peepraeza', password='029064755')
 	client.switch_database('test_energy')
-	firebases.post('/insertdb_afclinet!',{"before":'after insertdb'})
+	firebases.post('/insertdb_afclinet2!',{"before":'after insertdb'})
 	time.sleep(5)
 	global status_connect, time_disconnect, time_reconnect, firebases_1
 	while(True):
-		firebases_1.post('/Before_Query!',{"before":'after query'})
+		firebases_1.post('/Before_Query2!',{"before":'after query'})
 		results = client.query(("SELECT * from %s ORDER by time DESC LIMIT 1") % ('energy_monitor'))
 		points = results.get_points()
-		firebases_1.post('/After_query!',{"afteradd":'after query'})
+		firebases_1.post('/After_query2!',{"afteradd":'after query'})
 		for item in points:
 			time_obj = parse(item['time'])
 			unixtime = (calendar.timegm(time_obj.timetuple())*1000)
 			try:
-				firebases_1.post('/Before_Added!',{"before":'after query'})
+				firebases_1.post('/Before_Added2!',{"before":'after query'})
 				firebases = firebase.FirebaseApplication("https://data-log-fb39d.firebaseio.com/")
 				firebases.post('/test_again',{"time":unixtime, 
 				"Irms1":item['irms1'], "Irms2":item['irms2'], "Irms3":item['irms3'], "Irms4":item['irms4'],
 				"S1":item['apparentpower1'], "S2":item['apparentpower1'], "S3":item['apparentpower3'], "S4":item['apparentpower4'],
 				"P1":item['realpower1'], "P2":item['realpower2'], "P3":item['realpower3'], "P4":item['realpower4']})
 				print("Data Added")
-				firebases_1.post('/Data_Added!',{"can_query":'after query'})
+				firebases_1.post('/Data_Added2!',{"can_query":'after query'})
 				if(status_connect == 1): # if Internet connection reconnect
 					time_reconnect = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')	# keep last time that internet reconnect
 					status_connect = 2	# status change from 1 to 2 
