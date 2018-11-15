@@ -3,6 +3,8 @@ from influxdb import InfluxDBClient
 from firebase import firebase
 from datetime import datetime
 import threading
+import calendar
+from dateutil.parser import parse
 
 status_connect = 0		# check status connection with Internet
 time_disconnect = ""
@@ -15,12 +17,14 @@ client.switch_database('test_energy')
 def insertdb():
 	global status_connect, time_disconnect, time_reconnect
 	while(True):
-		results = client.query(("SELECT * FROM %s where time > now() - 5s") % ('energy_monitor'))
+		results = client.query(("SELECT * FROM %s where time > now() - 2s") % ('energy_monitor'))
 		points = results.get_points()
 		for item in points:
+			time_obj = parse(item['time'])
+			unixtime = (calendar.timegm(time_obj.timetuple())*1000)
 			try:
 				firebases = firebase.FirebaseApplication("https://data-log-fb39d.firebaseio.com/")
-				firebases.post('/test_again',{"time":item['time'], 
+				firebases.post('/test_again',{"time":unixtime, 
 				"Irms1":item['irms1'], "Irms2":item['irms2'], "Irms3":item['irms3'], "Irms4":item['irms4'],
 				"S1":item['apparentpower1'], "S2":item['apparentpower1'], "S3":item['apparentpower3'], "S4":item['apparentpower4'],
 				"P1":item['realpower1'], "P2":item['realpower2'], "P3":item['realpower3'], "P4":item['realpower4']})
@@ -49,7 +53,9 @@ def insertdb2():
 			results = client.query(("SELECT * FROM %s where time >= '%s' and time <= '%s'") % ('energy_monitor', time_disconnect, time_reconnect))
 			points = results.get_points()
 			for item in points:
-				firebases.post('/test_again',{"time":item['time'], 
+				time_obj = parse(item['time'])
+				unixtime = (calendar.timegm(time_obj.timetuple())*1000)
+				firebases.post('/test_again',{"time":unixtime, 
 				    "Irms1":item['irms1'], "Irms2":item['irms2'], "Irms3":item['irms3'], "Irms4":item['irms4'],
 				    "S1":item['apparentpower1'], "S2":item['apparentpower1'], "S3":item['apparentpower3'], "S4":item['apparentpower4'],
 				    "P1":item['realpower1'], "P2":item['realpower2'], "P3":item['realpower3'], "P4":item['realpower4']})
