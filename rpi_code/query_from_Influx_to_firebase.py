@@ -17,10 +17,11 @@ firebases_1.post('/Run4!',{"Heyyy":'its run 4'})
 
 # Main function for upload data from InfluxDB to Firebase all time
 def insertdb():
+	time.sleep(20)
 	client = InfluxDBClient(host='192.168.0.111', port=8086, username='peepraeza', password='029064755')
 	client.switch_database('test_energy')
 	firebases.post('/insertdb_afclinet2!',{"before":'after insertdb'})
-	time.sleep(5)
+	#time.sleep(5)
 	global status_connect, time_disconnect, time_reconnect, firebases_1
 	while(True):
 		firebases_1.post('/Before_Query2!',{"before":'after query'})
@@ -54,6 +55,7 @@ def insertdb():
 
 # Secondary function for Backup data when the Internet disconnected
 def insertdb2():
+	time.sleep(20)
 	client = InfluxDBClient(host='192.168.0.111', port=8086, username='peepraeza', password='029064755')
 	client.switch_database('test_energy')
 	global status_connect, time_disconnect, time_reconnect, client
