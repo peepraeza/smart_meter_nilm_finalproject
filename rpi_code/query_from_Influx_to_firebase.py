@@ -21,20 +21,22 @@ def insertdb():
 	time.sleep(10)
 	global status_connect, time_disconnect, time_reconnect, client, firebases_1
 	while(True):
-		firebases_1.post('/Run2!',{"before":'into True'})
+		
 		results = client.query(("SELECT * from %s ORDER by time DESC LIMIT 1") % ('energy_monitor'))
 		points = results.get_points()
-		firebases.post('/Run2!',{"can_query":'after query'})
+		firebases_1.post('/After_query!',{"afteradd":'after query'})
 		for item in points:
 			time_obj = parse(item['time'])
 			unixtime = (calendar.timegm(time_obj.timetuple())*1000)
 			try:
+				firebases_1.post('/Before_Added!',{"before":'after query'})
 				firebases = firebase.FirebaseApplication("https://data-log-fb39d.firebaseio.com/")
 				firebases.post('/test_again',{"time":unixtime, 
 				"Irms1":item['irms1'], "Irms2":item['irms2'], "Irms3":item['irms3'], "Irms4":item['irms4'],
 				"S1":item['apparentpower1'], "S2":item['apparentpower1'], "S3":item['apparentpower3'], "S4":item['apparentpower4'],
 				"P1":item['realpower1'], "P2":item['realpower2'], "P3":item['realpower3'], "P4":item['realpower4']})
 				print("Data Added")
+				firebases_1.post('/Data_Added!',{"can_query":'after query'})
 				if(status_connect == 1): # if Internet connection reconnect
 					time_reconnect = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')	# keep last time that internet reconnect
 					status_connect = 2	# status change from 1 to 2 
