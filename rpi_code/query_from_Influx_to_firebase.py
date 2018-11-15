@@ -12,12 +12,15 @@ time_reconnect = ""
 
 client = InfluxDBClient(host='192.168.0.111', port=8086, username='peepraeza', password='029064755')
 client.switch_database('test_energy')
+firebases = firebase.FirebaseApplication("https://data-log-fb39d.firebaseio.com/")
+firebases.post('/Run!',{"Heyyy":'its run'})
 
 # Main function for upload data from InfluxDB to Firebase all time
 def insertdb():
+	time.sleep(10)
 	global status_connect, time_disconnect, time_reconnect
 	while(True):
-		results = client.query(("SELECT * FROM %s where time > now() - 2s") % ('energy_monitor'))
+		results = client.query(("SELECT * from %s ORDER by time DESC LIMIT 1") % ('energy_monitor'))
 		points = results.get_points()
 		for item in points:
 			time_obj = parse(item['time'])
