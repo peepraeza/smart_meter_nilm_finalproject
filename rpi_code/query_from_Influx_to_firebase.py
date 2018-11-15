@@ -12,7 +12,7 @@ time_reconnect = ""
 
 # Main function for upload data from InfluxDB to Firebase all time
 def insertdb():
-	global status_connect, time_disconnect, time_reconnect, firebases_1
+	global status_connect, time_disconnect, time_reconnect
 	time.sleep(20)
 	client = InfluxDBClient(host='192.168.0.111', port=8086, username='peepraeza', password='029064755')
 	client.switch_database('test_energy')
