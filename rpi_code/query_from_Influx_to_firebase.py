@@ -9,16 +9,18 @@ from dateutil.parser import parse
 status_connect = 0		# check status connection with Internet
 time_disconnect = ""
 time_reconnect = ""
-
+firebases_1 = firebase.FirebaseApplication("https://data-log-fb39d.firebaseio.com/")
 # Main function for upload data from InfluxDB to Firebase all time
 def insertdb():
-	global status_connect, time_disconnect, time_reconnect
+	global status_connect, time_disconnect, time_reconnect, firebases_1
 	time.sleep(20)
 	client = InfluxDBClient(host='192.168.0.111', port=8086, username='peepraeza', password='029064755')
 	client.switch_database('test_energy')
+	firebases_1.post('/11Waited_20s',{"time":datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')})
 	while(True):
 		results = client.query(("SELECT * from %s ORDER by time DESC LIMIT 1") % ('energy_monitor'))
 		points = results.get_points()
+		firebases_1.post('/11FinishQuery',{"time":datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')})
 		for item in points:
 			time_obj = parse(item['time'])
 			unixtime = (calendar.timegm(time_obj.timetuple())*1000)
@@ -29,6 +31,7 @@ def insertdb():
 				"S1":item['apparentpower1'], "S2":item['apparentpower1'], "S3":item['apparentpower3'], "S4":item['apparentpower4'],
 				"P1":item['realpower1'], "P2":item['realpower2'], "P3":item['realpower3'], "P4":item['realpower4']})
 				print("Data Added")
+				firebases_1.post('/11DataADD_JA',{"time":datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')})
 				firebases.post('/DataADD_JA',{"time":item['time']})
 				if(status_connect == 1): # if Internet connection reconnect
 					time_reconnect = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')	# keep last time that internet reconnect
