@@ -10,17 +10,19 @@ status_connect = 0		# check status connection with Internet
 time_disconnect = ""
 time_reconnect = ""
 firebases_1 = firebase.FirebaseApplication("https://data-log-fb39d.firebaseio.com/")
+firebases_1.post('/11OutofFunction',{datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'):datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')})
 # Main function for upload data from InfluxDB to Firebase all time
 def insertdb():
 	global status_connect, time_disconnect, time_reconnect, firebases_1
 	time.sleep(20)
 	client = InfluxDBClient(host='192.168.0.111', port=8086, username='peepraeza', password='029064755')
 	client.switch_database('test_energy')
-	firebases_1.post('/11Waited_20s',{"time":datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')})
+	firebases_1.post('/11Waited_20s',{datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'):datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')})
 	while(True):
+		firebases_1.post('/11BeforeQuery',{datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'):datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')})
 		results = client.query(("SELECT * from %s ORDER by time DESC LIMIT 1") % ('energy_monitor'))
 		points = results.get_points()
-		firebases_1.post('/11FinishQuery',{"time":datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')})
+		firebases_1.post('/11Finish_query',{datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'):datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')})
 		for item in points:
 			time_obj = parse(item['time'])
 			unixtime = (calendar.timegm(time_obj.timetuple())*1000)
