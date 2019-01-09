@@ -1,8 +1,10 @@
 import paho.mqtt.client as mqtt
 from influxdb import InfluxDBClient
 from datetime import datetime
+from firebase import firebase
 import time
 import json
+
 
 client_db = InfluxDBClient(host='192.168.0.111', port=8086, username='peepraeza', password='029064755')
 #client_db.create_database('test_energy')
@@ -17,36 +19,30 @@ def on_message(client, userdata, msg):
 	insertdb(str(msg.payload))
 
 def insertdb(message):
-	
+	# print(message)
 	pieces = message.split(',')
-	if(pieces[0] == "START" and pieces[-1] == "END"):
-		current_time = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
-	
-		json_body = [
-		{
-		    "measurement": "energy_monitor",
-		    "time": current_time,
-		    "fields": {
-		        "irms1": float(pieces[1]),
-		        "irms2": float(pieces[2]),
-		        "irms3": float(pieces[3]),
-		        "irms4": float(pieces[4]),
+	if(pieces[0] == "b'START" and pieces[-1] == "END'"):
+		firebases = firebase.FirebaseApplication("https://data-log-fb39d.firebaseio.com/")
+		time_unix = int(time.time()) 
+		json_body = {
+				"time": time_unix,
+		        "I1": float(pieces[1]),
+		        "I2": float(pieces[2]),
+		        "I3": float(pieces[3]),
+		        "I4": float(pieces[4]),
 
-		        "realpower1": float(pieces[5]),
-		        "realpower2": float(pieces[6]),
-		        "realpower3": float(pieces[7]),
-		        "realpower4": float(pieces[8]),
+		        "P1": float(pieces[5]),
+		        "P2": float(pieces[6]),
+		        "P3": float(pieces[7]),
+		        "P4": float(pieces[8]),
 
-		        "apparentpower1": float(pieces[9]),
-		        "apparentpower2": float(pieces[10]),
-		        "apparentpower3": float(pieces[11]),
-		        "apparentpower4": float(pieces[12])
-		    }
-		}]
-		
-		client_db.write_points(json_body)
-		
-		print(current_time, float(pieces[1]), float(pieces[2]),float(pieces[10]))
+		        "S1": float(pieces[9]),
+		        "S2": float(pieces[10]),
+		        "S3": float(pieces[11]),
+		        "S4": float(pieces[12])  
+		}
+		firebases.post('/energy',json_body)
+		print(time_unix)
 	else:
 		print("Miss some data")
 

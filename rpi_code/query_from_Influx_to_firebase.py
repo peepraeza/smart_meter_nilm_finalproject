@@ -16,7 +16,6 @@ def insertdb():
 	client = InfluxDBClient(host='192.168.0.111', port=8086, username='peepraeza', password='029064755')
 	client.switch_database('test_energy')
 	while(True):
-<<<<<<< HEAD
                 try:
 		    results = client.query(("SELECT * from %s ORDER by time DESC LIMIT 1") % ('energy_monitor'))
                     points = results.get_points()
