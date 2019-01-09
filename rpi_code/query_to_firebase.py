@@ -21,7 +21,7 @@ def on_message(client, userdata, msg):
 def insertdb(message):
 	# print(message)
 	pieces = message.split(',')
-	if(pieces[0] == "b'START" and pieces[-1] == "END'"):
+	if(pieces[0] == "START" and pieces[-1] == "END"):
 		firebases = firebase.FirebaseApplication("https://data-log-fb39d.firebaseio.com/")
 		time_unix = int(time.time()) 
 		json_body = {
