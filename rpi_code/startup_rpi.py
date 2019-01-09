@@ -9,10 +9,9 @@ def startprgm(i):
         print('Running: insert_influxdb.py')
         os.system("sudo python /home/pi/Desktop/project_code/smart_meter_nilm_finalproject/rpi_code/insert_influxdb.py")
     elif (i == 1):
-	print("NO")
-        #print('Running: query_from_Influx_to_firebase.py')
-        #time.sleep(1)
-        #os.system("sudo python /home/pi/Desktop/project_code/smart_meter_nilm_finalproject/rpi_code/query_from_Influx_to_firebase.py")
+        print('Running: query__to_firebase.py')
+        time.sleep(1)
+        os.system("sudo python /home/pi/Desktop/project_code/smart_meter_nilm_finalproject/rpi_code/query__to_firebase.py")
     else:
         pass
 
