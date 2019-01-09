@@ -16,6 +16,7 @@ def insertdb():
 	client = InfluxDBClient(host='192.168.0.111', port=8086, username='peepraeza', password='029064755')
 	client.switch_database('test_energy')
 	while(True):
+<<<<<<< HEAD
                 try:
 		    results = client.query(("SELECT * from %s ORDER by time DESC LIMIT 1") % ('energy_monitor'))
                     points = results.get_points()
@@ -41,6 +42,29 @@ def insertdb():
                                             time_disconnect = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')	# keep first time that internet disconnected
                                     status_connect = 1	# status change from 0 to 1 
                                     print("Data Can't add")
+=======
+		results = client.query(("SELECT * from %s ORDER by time DESC LIMIT 1") % ('energy_monitor'))
+		points = results.get_points()
+		for item in points:
+			time_obj = parse(item['time'])
+			unixtime = (calendar.timegm(time_obj.timetuple())*1000)
+			try:
+				firebases = firebase.FirebaseApplication("https://data-log-fb39d.firebaseio.com/")
+				firebases.post('/test_again',{"time":unixtime, "Irms1":item['irms1'], "Irms2":item['irms2'], "Irms3":item['irms3'], "Irms4":item['irms4'],
+				"S1":item['apparentpower1'], "S2":item['apparentpower2'], "S3":item['apparentpower3'], "S4":item['apparentpower4'],
+				"P1":item['realpower1'], "P2":item['realpower2'], "P3":item['realpower3'], "P4":item['realpower4']})
+				print("I1:"+item['irms1']+" I2:"+item['irms2'])
+				print("S1:"+item['apparentpower1']+" S2:"+item['apparentpower2'])
+				print(unixtime)
+				if(status_connect == 1): # if Internet connection reconnect
+					time_reconnect = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')	# keep last time that internet reconnect
+					status_connect = 2	# status change from 1 to 2 
+			except:
+				if (status_connect == 0): # if Internet connection disconnected 
+					time_disconnect = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')	# keep first time that internet disconnected
+				status_connect = 1	# status change from 0 to 1 
+				print('Data not added')
+>>>>>>> 4e4f7eaf03eb740672d55f16e31cca47a60bd48a
 
                     print("disconnect:"+time_disconnect)
                     print("reconnect:"+time_reconnect)
