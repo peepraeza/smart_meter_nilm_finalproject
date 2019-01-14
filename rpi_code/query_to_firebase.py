@@ -21,7 +21,7 @@ def on_message(client, userdata, msg):
 def insertdb(message):
 	global time_unix
 	pieces = message.split(',')
-	if(pieces[0] == "START" and pieces[-1] == "END"):
+	if(pieces[0] == "b'START" and pieces[-1] == "END'"):
 		firebases = firebase.FirebaseApplication("https://data-log-fb39d.firebaseio.com/")
 		if(time_unix != int(time.time())):
 			time_unix = int(time.time())
@@ -45,11 +45,7 @@ def insertdb(message):
 			}
 		print("firebase_time", time_unix)
 		firebases.post('/energy',json_body)	
-<<<<<<< HEAD
-		time.sleep(0.5)
-=======
-		time.sleep(1)
->>>>>>> refs/remotes/origin/master
+		# time.sleep(1)
 	else:
 		print("Miss some data")
 	time_unix += 1
