@@ -15,12 +15,10 @@ def on_message(client, userdata, msg):
 	insertdb(str(msg.payload))
 
 def insertdb(message):
+	time_unix = int(time.time())
 	pieces = message.split(',')
 	if(pieces[0] == "START" and pieces[-1] == "END"):
 		firebases = firebase.FirebaseApplication("https://data-log-fb39d.firebaseio.com/")
-		if(time_unix != int(time.time())):
-			time_unix = int(time.time())
-	
 		json_body = {
 			"time": time_unix,
 	        "I1": float(pieces[1]),
