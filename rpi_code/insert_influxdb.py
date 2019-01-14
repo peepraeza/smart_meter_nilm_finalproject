@@ -41,7 +41,6 @@ def insertdb(message):
 		        "apparentpower4": float(pieces[12])
 		    }
 		}]
-		print("influxdb_time", time_unix)
 		client_db.write_points(json_body)
 	else:
 		print("Miss some data")
