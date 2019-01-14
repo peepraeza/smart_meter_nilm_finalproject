@@ -45,8 +45,6 @@ def insertdb(message):
 		}]
 		
 		client_db.write_points(json_body)
-		
-		print(current_time, float(pieces[1]), float(pieces[2]),float(pieces[10]))
 	else:
 		print("Miss some data")
 
