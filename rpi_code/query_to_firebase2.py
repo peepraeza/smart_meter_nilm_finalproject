@@ -5,6 +5,9 @@ from firebase import firebase
 import time
 import json
 
+client_db = InfluxDBClient(host='192.168.0.111', port=8086, username='peepraeza', password='029064755')
+#client_db.create_database('test_energy')
+client_db.switch_database('test_energy')
 #Callbacks
 def on_connect(client, userdata, flags, rc):
 	print("Connected with Code :"+ str(rc))
@@ -14,10 +17,11 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client, userdata, msg):
 	message = str(msg.payload)
 	time_unix = int(time.time())
+	current_time = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
 	pieces = message.split(',')
 	firebases = firebase.FirebaseApplication("https://data-log-fb39d.firebaseio.com/")
 	if(pieces[0] == "START" and pieces[-1] == "END"):
-		json_body = {
+		json_firebase = {
 			"time": time_unix,
 	        "I1": float(pieces[1]),
 	        "I2": float(pieces[2]),
@@ -34,8 +38,31 @@ def on_message(client, userdata, msg):
 	        "S3": float(pieces[11]),
 	        "S4": float(pieces[12])  
 			}
+		
+		json_influx = [
+		{
+		    "measurement": "energy_monitor",
+		    "time": current_time,
+		    "fields": {
+		        "irms1": float(pieces[1]),
+		        "irms2": float(pieces[2]),
+		        "irms3": float(pieces[3]),
+		        "irms4": float(pieces[4]),
+
+		        "realpower1": float(pieces[5]),
+		        "realpower2": float(pieces[6]),
+		        "realpower3": float(pieces[7]),
+		        "realpower4": float(pieces[8]),
+
+		        "apparentpower1": float(pieces[9]),
+		        "apparentpower2": float(pieces[10]),
+		        "apparentpower3": float(pieces[11]),
+		        "apparentpower4": float(pieces[12])
+		    }
+		}]
 		print("firebase_time", time_unix)
-		firebases.post('/energy',json_body)
+		client_db.write_points(json_influx)
+		firebases.post('/energy',json_firebase)
 		time.sleep(3)
 	else:
 		print("Miss some data")
