@@ -5,7 +5,6 @@ from firebase import firebase
 import time
 import json
 
-time_unix = int(time.time())
 #Callbacks
 def on_connect(client, userdata, flags, rc):
 	print("Connected with Code :"+ str(rc))
@@ -16,7 +15,6 @@ def on_message(client, userdata, msg):
 	insertdb(str(msg.payload))
 
 def insertdb(message):
-	global time_unix
 	pieces = message.split(',')
 	if(pieces[0] == "START" and pieces[-1] == "END"):
 		firebases = firebase.FirebaseApplication("https://data-log-fb39d.firebaseio.com/")
@@ -42,9 +40,9 @@ def insertdb(message):
 			}
 		print("firebase_time", time_unix)
 		firebases.post('/energy',json_body)
+		time.sleep(3)
 	else:
 		print("Miss some data")
-	time_unix += 1
 
 client = mqtt.Client()
 client.on_connect = on_connect
