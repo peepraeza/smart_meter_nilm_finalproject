@@ -6,7 +6,6 @@ import time
 import json
 
 time_unix = int(time.time())
-print(time_unix)
 client_db = InfluxDBClient(host='192.168.0.111', port=8086, username='peepraeza', password='029064755')
 #client_db.create_database('test_energy')
 client_db.switch_database('test_energy')
@@ -20,13 +19,11 @@ def on_message(client, userdata, msg):
 	insertdb(str(msg.payload))
 
 def insertdb(message):
-	print(message)
+	global time_unix
 	pieces = message.split(',')
 	if(pieces[0] == "START" and pieces[-1] == "END"):
 		firebases = firebase.FirebaseApplication("https://data-log-fb39d.firebaseio.com/")
-		# time_unix = int(time.time())
 		if(time_unix != int(time.time())):
-			print("false")
 			time_unix = int(time.time())
 	
 		json_body = {
@@ -46,9 +43,10 @@ def insertdb(message):
 	        "S3": float(pieces[11]),
 	        "S4": float(pieces[12])  
 			}
-		firebases.post('/energy',json_body)	
+		print("firebase_time", time_unix)
 		time_unix += 1
-		print(time_unix)
+		firebases.post('/energy',json_body)	
+		
 	else:
 		print("Miss some data")
 

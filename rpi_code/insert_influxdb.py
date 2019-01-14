@@ -4,6 +4,7 @@ from datetime import datetime
 import time
 import json
 
+time_unix = int(time.time())
 client_db = InfluxDBClient(host='192.168.0.111', port=8086, username='peepraeza', password='029064755')
 #client_db.create_database('test_energy')
 client_db.switch_database('test_energy')
@@ -21,7 +22,9 @@ def insertdb(message):
 	pieces = message.split(',')
 	if(pieces[0] == "START" and pieces[-1] == "END"):
 		current_time = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
-	
+		if(time_unix != int(time.time())):
+			time_unix = int(time.time())
+
 		json_body = [
 		{
 		    "measurement": "energy_monitor",
@@ -43,7 +46,8 @@ def insertdb(message):
 		        "apparentpower4": float(pieces[12])
 		    }
 		}]
-		
+		print("influxdb_time", time_unix)
+		time_unix += 1
 		client_db.write_points(json_body)
 	else:
 		print("Miss some data")
