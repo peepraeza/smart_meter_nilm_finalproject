@@ -6,7 +6,6 @@ import time
 import json
 
 time_unix = int(time.time())
-previous_time = 0
 #Callbacks
 def on_connect(client, userdata, flags, rc):
 	print("Connected with Code :"+ str(rc))
@@ -17,7 +16,7 @@ def on_message(client, userdata, msg):
 	insertdb(str(msg.payload))
 
 def insertdb(message):
-	global time_unix, previous_time
+	global time_unix
 	pieces = message.split(',')
 	if(pieces[0] == "b'START" and pieces[-1] == "END'"):
 		firebases = firebase.FirebaseApplication("https://data-log-fb39d.firebaseio.com/")
@@ -42,10 +41,7 @@ def insertdb(message):
 	        "S4": float(pieces[12])  
 			}
 		print("firebase_time", time_unix)
-		if(time_unix != previous_time):
-			firebases.post('/energy',json_body)
-			print("data added")
-			previous_time = time_unix
+		firebases.post('/energy',json_body)
 	else:
 		print("Miss some data")
 	time_unix += 1

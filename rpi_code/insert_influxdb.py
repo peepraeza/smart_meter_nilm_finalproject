@@ -1,11 +1,9 @@
 import paho.mqtt.client as mqtt
 from influxdb import InfluxDBClient
 from datetime import datetime
-from firebase import firebase
 import time
 import json
 
-time_unix = int(time.time())
 client_db = InfluxDBClient(host='192.168.0.111', port=8086, username='peepraeza', password='029064755')
 #client_db.create_database('test_energy')
 client_db.switch_database('test_energy')
@@ -19,14 +17,9 @@ def on_message(client, userdata, msg):
 	insertdb(str(msg.payload))
 
 def insertdb(message):
-	global time_unix
 	pieces = message.split(',')
 	if(pieces[0] == "START" and pieces[-1] == "END"):
-		firebases = firebase.FirebaseApplication("https://data-log-fb39d.firebaseio.com/")
 		current_time = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
-		# if(time_unix != int(time.time())):
-		# 	time_unix = int(time.time())
-
 		json_body = [
 		{
 		    "measurement": "energy_monitor",
@@ -50,8 +43,6 @@ def insertdb(message):
 		}]
 		print("influxdb_time", time_unix)
 		client_db.write_points(json_body)
-		firebases.post('/energy',json_body)
-		time.sleep(1)
 	else:
 		print("Miss some data")
 
