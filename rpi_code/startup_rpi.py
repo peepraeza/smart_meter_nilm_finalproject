@@ -1,7 +1,7 @@
 import time
 import threading
 import os
-os.system("sudo python /home/pi/Desktop/project_code/smart_meter_nilm_finalproject/rpi_code/query_to_firebase2.py")
+os.system("sudo python /home/pi/Desktop/project_code/smart_meter_nilm_finalproject/rpi_code/insert_influxdb2.py")
 # def startprgm(i):
 #     print "Running thread %d" % i
 #     if (i == 0):
