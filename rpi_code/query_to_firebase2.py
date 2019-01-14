@@ -63,7 +63,7 @@ def on_message(client, userdata, msg):
 		print("firebase_time", time_unix)
 		client_db.write_points(json_influx)
 		firebases.post('/energy',json_firebase)
-		time.sleep(3)
+		time.sleep(1)
 	else:
 		print("Miss some data")
 
