@@ -22,14 +22,14 @@ def on_message(client, userdata, msg):
 	firebases.post('/testdata',json_body)
 	time.sleep(5)
 	i = 0
-def startprgm(i):
-	while (True):
-		time_now = int(time.time())
-		firebases = firebase.FirebaseApplication("https://data-log-fb39d.firebaseio.com/")
-		json_body = {"time" : time_now}	
-		firebases.post('/time',json_body)
-		print(time_now)
-		time.sleep(2)
+# def startprgm(i):
+# 	while (True):
+# 		time_now = int(time.time())
+# 		firebases = firebase.FirebaseApplication("https://data-log-fb39d.firebaseio.com/")
+# 		json_body = {"time" : time_now}	
+# 		firebases.post('/time',json_body)
+# 		print(time_now)
+# 		time.sleep(2)
 # def insertdb(message):
 # 	global time_unix
 # 	pieces = message.split(',')
@@ -66,9 +66,9 @@ def startprgm(i):
 # 		time.sleep(1)
 # 	else:
 # 		print("Miss some data")
-for i in range(1):
-    t = threading.Thread(target=startprgm, args=(i,))
-    t.start()
+# for i in range(1):
+#     t = threading.Thread(target=startprgm, args=(i,))
+#     t.start()
 client = mqtt.Client()
 client.on_connect = on_connect
 client.on_message = on_message
