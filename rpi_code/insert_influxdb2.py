@@ -14,7 +14,8 @@ def on_connect(client, userdata, flags, rc):
 
 def on_message(client, userdata, msg):
 	firebases = firebase.FirebaseApplication("https://data-log-fb39d.firebaseio.com/")
-	json_body = {"time" : int(time.time())}
+	json_body = {"time" : int(time.time()),
+				 "data" : str(msg.payload)}
 	firebases.post('/testdata',json_body)
 	time.sleep(5)
 
