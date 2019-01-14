@@ -16,6 +16,7 @@ def on_message(client, userdata, msg):
 	firebases = firebase.FirebaseApplication("https://data-log-fb39d.firebaseio.com/")
 	json_body = {"time" : int(time.time())}
 	firebases.post('/testdata',json_body)
+	time.sleep(5)
 
 # def insertdb(message):
 # 	global time_unix
