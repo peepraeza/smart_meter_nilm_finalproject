@@ -51,6 +51,7 @@ def insertdb(message):
 		print("influxdb_time", time_unix)
 		client_db.write_points(json_body)
 		firebases.post('/energy',json_body)
+		time.sleep(1)
 	else:
 		print("Miss some data")
 
