@@ -46,7 +46,7 @@ def insertdb(message):
 		print("firebase_time", time_unix)
 		time_unix += 1
 		firebases.post('/energy',json_body)	
-		
+		time.sleep(0.3)
 	else:
 		print("Miss some data")
 
