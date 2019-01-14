@@ -44,11 +44,15 @@ def insertdb(message):
 	        "S4": float(pieces[12])  
 			}
 		print("firebase_time", time_unix)
-		time_unix += 1
 		firebases.post('/energy',json_body)	
+<<<<<<< HEAD
 		time.sleep(0.5)
+=======
+		time.sleep(1)
+>>>>>>> refs/remotes/origin/master
 	else:
 		print("Miss some data")
+	time_unix += 1
 
 client = mqtt.Client()
 client.on_connect = on_connect
