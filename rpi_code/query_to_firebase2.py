@@ -53,10 +53,12 @@ def on_message(client, userdata, msg):
 		    "time": current_time,
 		    "fields": json_firebase
 		}]
-		print("firebase_time", time_unix)
 		client_db.write_points(json_influx)
+		print("influxdb complete!", current_time)
+		time_start = int(time.time())
 		try:
 			firebases.post('/energy',json_firebase)
+			print("firebase complete!", time_unix)
 			if(status_connect == 1):
 				time_reconnect = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
 				status_connect = 2
@@ -64,6 +66,8 @@ def on_message(client, userdata, msg):
 			if(status_connect == 0):
 				time_disconnect = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
 			status_connect = 1
+		time_end = int(time.time())
+		print(status_connect, time_end - time_start)
 		time.sleep(4)
 	else:
 		print("Miss some data")
@@ -72,11 +76,11 @@ def backup_data():
 	global status_connect, time_disconnect, time_reconnect
 	while(True):
 		if(status_connect == 2):
-			client = InfluxDBClient(host='192.168.0.111', port=8086, username='peepraeza', password='029064755')
-			client.switch_database('test_energy')
+			client_influx = InfluxDBClient(host='192.168.0.111', port=8086, username='peepraeza', password='029064755')
+			client_influx.switch_database('test_energy')
 			firebases = firebase.FirebaseApplication("https://data-log-fb39d.firebaseio.com/")
 			print("dis", time_disconnect, "re", time_reconnect)
-			results = client.query(("SELECT * FROM %s where time >= '%s' and time <= '%s'") % ('energy_monitor', time_disconnect, time_reconnect))
+			results = client_influx.query(("SELECT * FROM %s where time >= '%s' and time <= '%s'") % ('energy_monitor', time_disconnect, time_reconnect))
 			points = results.get_points()
 			for item in points:
 				time_obj = parse(item['time'])
@@ -89,8 +93,10 @@ def backup_data():
 			status_connect = 0
 			time_disconnect = ""
 			time_reconnect = ""
+		elif(status_connect == 1):
+			print("Disconnecting")
 		else:
-			print("Connecting Well")
+			print("Connection Well")
 		time.sleep(10)
 
 th1 = threading.Thread(target = backup_data).start()
