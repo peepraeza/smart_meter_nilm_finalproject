@@ -23,6 +23,7 @@ def on_message(client, userdata, msg):
 
 def insertdb(message):
 	global status_connect, time_disconnect, time_reconnect
+	print(message)
 	time_unix = int(time.time())
 	pieces = message.split(',')
 	if(pieces[0] == "START" and pieces[-1] == "END"):
