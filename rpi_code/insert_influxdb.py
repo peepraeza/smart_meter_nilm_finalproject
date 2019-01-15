@@ -25,20 +25,20 @@ def insertdb(message):
 		    "measurement": "energy_monitor",
 		    "time": current_time,
 		    "fields": {
-		        "irms1": float(pieces[1]),
-		        "irms2": float(pieces[2]),
-		        "irms3": float(pieces[3]),
-		        "irms4": float(pieces[4]),
+		        "I1": float(pieces[1]),
+		        "I2": float(pieces[2]),
+		        "I3": float(pieces[3]),
+		        "I4": float(pieces[4]),
 
-		        "realpower1": float(pieces[5]),
-		        "realpower2": float(pieces[6]),
-		        "realpower3": float(pieces[7]),
-		        "realpower4": float(pieces[8]),
+		        "P1": float(pieces[5]),
+		        "P2": float(pieces[6]),
+		        "P3": float(pieces[7]),
+		        "P4": float(pieces[8]),
 
-		        "apparentpower1": float(pieces[9]),
-		        "apparentpower2": float(pieces[10]),
-		        "apparentpower3": float(pieces[11]),
-		        "apparentpower4": float(pieces[12])
+		        "S1": float(pieces[9]),
+		        "S2": float(pieces[10]),
+		        "S3": float(pieces[11]),
+		        "S4": float(pieces[12])
 		    }
 		}]
 		client_db.write_points(json_body)
