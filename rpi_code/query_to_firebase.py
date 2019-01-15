@@ -47,7 +47,7 @@ def insertdb(message):
 			}
 		time_start = int(time.time())
 		try:
-			firebases.post('/energy',json_firebase)
+			firebases.post('/energy',json_body)
 			print("firebase complete!", time_unix)
 			if(status_connect == 1):
 				time_reconnect = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
