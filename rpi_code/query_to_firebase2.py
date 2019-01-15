@@ -75,6 +75,7 @@ def backup_data():
 			client = InfluxDBClient(host='192.168.0.111', port=8086, username='peepraeza', password='029064755')
 			client.switch_database('test_energy')
 			firebases = firebase.FirebaseApplication("https://data-log-fb39d.firebaseio.com/")
+			print("dis", time_disconnect, "re", time_reconnect)
 			results = client.query(("SELECT * FROM %s where time >= '%s' and time <= '%s'") % ('energy_monitor', time_disconnect, time_reconnect))
 			points = results.get_points()
 			for item in points:
@@ -84,6 +85,7 @@ def backup_data():
 				    "I1":item['I1'], "I2":item['I2'], "I3":item['I3'], "I3":item['I4'],
 				    "S1":item['S1'], "S2":item['S2'], "S3":item['S3'], "S4":item['S4'],
 				    "P1":item['P1'], "P2":item['P2'], "P3":item['P3'], "P4":item['P4']})
+				print(unixtime)
 			status_connect = 0
 			time_disconnect = ""
 			time_reconnect = ""
