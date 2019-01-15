@@ -42,6 +42,7 @@ def insertdb(message):
 		    }
 		}]
 		client_db.write_points(json_body)
+		print("influxdb complete!", current_time)
 	else:
 		print("Miss some data")
 

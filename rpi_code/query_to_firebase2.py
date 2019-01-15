@@ -12,6 +12,7 @@ status_connect = 0
 time_disconnect = ""
 time_reconnect = ""
 
+firebases = firebase.FirebaseApplication("https://data-log-fb39d.firebaseio.com/")
 client_db = InfluxDBClient(host='192.168.0.111', port=8086, username='peepraeza', password='029064755')
 #client_db.create_database('test_energy')
 client_db.switch_database('test_energy')
@@ -27,7 +28,6 @@ def on_message(client, userdata, msg):
 	time_unix = int(time.time())
 	current_time = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
 	pieces = message.split(',')
-	firebases = firebase.FirebaseApplication("https://data-log-fb39d.firebaseio.com/")
 	if(pieces[0] == "START" and pieces[-1] == "END"):
 		json_firebase = {
 			"time": time_unix,
@@ -53,6 +53,7 @@ def on_message(client, userdata, msg):
 		    "time": current_time,
 		    "fields": json_firebase
 		}]
+
 		client_db.write_points(json_influx)
 		print("influxdb complete!", current_time)
 		time_start = int(time.time())
