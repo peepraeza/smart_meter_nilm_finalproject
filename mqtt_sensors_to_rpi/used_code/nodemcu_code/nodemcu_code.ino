@@ -5,7 +5,7 @@ SoftwareSerial NodeSerial(D2,D3); // RX | TX
 
 const char* ssid = "Peerawit-WiFi";                   // wifi ssid
 const char* password =  "p12345678";         // wifi password
-const char* mqttServer = "192.168.0.111";    // IP adress Raspberry Pi
+const char* mqttServer = "192.168.0.102";    // IP adress Raspberry Pi
 const int mqttPort = 1883;
 const char* mqttUser = "peepraeza";      // if you don't have MQTT Username, no need input
 const char* mqttPassword = "029064755";  // if you don't have MQTT Password, no need input
@@ -107,8 +107,11 @@ void loop() {
       client.publish("esp8266", send_data);
       client.subscribe("esp8266");
       readString="";
+      
       client.loop();
     }
+    delay(2000);
     yield();
   } 
+  
 }
