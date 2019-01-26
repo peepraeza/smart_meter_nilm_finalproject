@@ -5,6 +5,7 @@
 #include <DNSServer.h>
 #include <ESP8266WebServer.h>
 #include <WiFiManager.h>
+#include <EEPROM.h>
 SoftwareSerial NodeSerial(D5,D6); // RX | TX
 
 #define button D0
@@ -14,7 +15,7 @@ SoftwareSerial NodeSerial(D5,D6); // RX | TX
 #define led_wifi D1
 #define led_mqtt D2
 #define led_send_data D3
-#define SERVER_NAME "http://rasppi-ip.herokuapp.com/ip.txt"
+#define SERVER_NAME "http://rasppi-ip.herokuapp.com/show_ip.php"
 
 const char* mqttServer = "";    // IP adress Raspberry Pi
 const int mqttPort = 1883;
@@ -26,8 +27,9 @@ int buttonState = 0;         // current state of the button
 int lastButtonState = 0;     // previous state of the button
 
 PubSubClient client(espClient);
-
+WiFiManager wifiManager;
 void setup() {
+
   pinMode(ConfigWiFi_Pin, INPUT);
   pinMode(led_wifi, OUTPUT);
   pinMode(led_mqtt, OUTPUT);
@@ -39,37 +41,54 @@ void setup() {
   
   Serial.begin(9600);
   NodeSerial.begin(4800);
-  
   WIFI_Connect();
+  Serial.println( "Go to MQTT" );
   MQTT_Connect();
 }
 
 void WIFI_Connect(){
-  WiFiManager wifiManager;
+  WiFi.begin(EEPROM_ESP8266_LEER(0,32).c_str(), EEPROM_ESP8266_LEER(32,64).c_str());
   while(WiFi.status() != WL_CONNECTED){
-    for (int i = 0; i < 5; i++){
-        delay ( 100 );
-        digitalWrite(led_wifi, HIGH);
-        Serial.print ( "." );
-        delay ( 100 );
+    delay ( 250 );
+    digitalWrite(led_wifi, HIGH);
+    Serial.print ( "." );
+    delay ( 250 );
+    digitalWrite(led_wifi, LOW);
+    buttonState = digitalRead(ConfigWiFi_Pin);
+    if (buttonState != lastButtonState) {
+      if (buttonState == HIGH) {
+        Serial.println("-------RESET--------");
         digitalWrite(led_wifi, LOW);
+        resetWifi();
       }
-    wifiManager.autoConnect(ESP_AP_NAME); 
+      delay(50);
+    }
+    lastButtonState = buttonState;
     yield();
     }
    Serial.println("WiFi connected");  
-  digitalWrite(led_wifi, HIGH);
+   digitalWrite(led_wifi, HIGH);
 }
 
+void resetWifi(){
+  wifiManager.resetSettings();
+  wifiManager.autoConnect(ESP_AP_NAME); 
+  Serial.println(WiFi.SSID());
+  Serial.println(WiFi.psk());
+  if(WiFi.status() == WL_CONNECTED){
+    EEPROM_ESP8266_GRABAR(WiFi.SSID(), 0); //Primero de 0 al 32, del 32 al 64, etc
+    EEPROM_ESP8266_GRABAR(WiFi.psk(), 32); //SAVE
+    Serial.println("Save");
+  }
+}
+  
 void MQTT_Connect(){
-//  client.setServer(mqttServer, mqttPort);
-//  client.setCallback(callback);
-//  client.connect("ESP8266Client", mqttUser, mqttPassword);
   if (client.connected()){Serial.println("MQTT Connected");}
   while (!client.connected()) {
     if(WiFi.status() != WL_CONNECTED){
+      digitalWrite(led_mqtt, LOW);
       WIFI_Connect();
-     }
+    }
      
     HTTPClient http;
     Serial.println("[HTTP] starting...\n");
@@ -114,6 +133,21 @@ void callback(char* topic, byte* payload, unsigned int length) {
   digitalWrite(led_send_data, HIGH);
 }
 
+void EEPROM_ESP8266_GRABAR(String buffer, int N) {
+  EEPROM.begin(512); delay(10);
+  for (int L = 0; L < 32; ++L) {
+    EEPROM.write(N + L, buffer[L]);
+  }
+  EEPROM.commit();
+}
+
+String EEPROM_ESP8266_LEER(int min, int max) {
+  EEPROM.begin(512); delay(10); String buffer;
+  for (int L = min; L < max; ++L){
+      buffer += char(EEPROM.read(L));
+  }
+  return buffer;
+}
 
 void loop() {
   
@@ -123,7 +157,7 @@ void loop() {
   if (buttonState != lastButtonState) {
     // if the state has changed, increment the counter
     if (buttonState == HIGH) {
-      WiFiManager wifiManager;
+      
       digitalWrite(led_wifi, LOW);
       Serial.println("-------RESET--------");
       wifiManager.resetSettings();
