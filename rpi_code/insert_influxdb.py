@@ -10,12 +10,16 @@ client_db = InfluxDBClient(host='localhost', port=8086, username='peepraeza', pa
 #client_db.create_database('test_energy')
 client_db.switch_database('test_energy')
 #Callbacks
-with open(os.system(file)) as csv_file:
-    csv_reader = csv.reader(csv_file, delimiter=',')
-    for row in csv_reader:
-        if(row):
-        	array = row
-whole_p1, whole_p2, whole_p3, whole_p4 = float(array[0]), float(array[1]), float(array[2]), float(array[3]) 
+try:
+	results = client_influx.query(("SELECT * FROM %s GROUP BY * ORDER BY DESC LIMIT 1") % ('energy_monitor'))
+	points = results.get_points()
+	for item in points:
+	    whole_p1 = item['whole_p1']
+	    whole_p2 = item['whole_p2']
+	    whole_p3 = item['whole_p3']
+	    whole_p4 = item['whole_p4']
+except:
+	whole_p1, whole_p2, whole_p3, whole_p4 = 0,0,0,0
 
 def insert_to_csv(data):
     with open(os.system(file), mode='w') as csv_file:
