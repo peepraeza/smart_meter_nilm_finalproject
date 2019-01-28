@@ -32,7 +32,7 @@ def on_message(client, userdata, msg):
 def insertdb(message):
     pieces = message.split(',')
     global whole_p1, whole_p2, whole_p3, whole_p4
-    if(pieces[0] == "b'START" and "END" in pieces[13]):
+    if(pieces[0] == "START" and "END" in pieces[13]):
         current_time = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
         p1_wh = float(pieces[5])/1800
         p2_wh = float(pieces[6])/1800
