@@ -4,12 +4,12 @@ from datetime import datetime
 import time
 import json
 import csv
-
+file = "/home/pi/Desktop/smart_meter_nilm_finalproject/rpi_code/whole_power.py"
 client_db = InfluxDBClient(host='localhost', port=8086, username='peepraeza', password='029064755')
 #client_db.create_database('test_energy')
 client_db.switch_database('test_energy')
 #Callbacks
-with open('whole_power.csv') as csv_file:
+with open(file) as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=',')
     for row in csv_reader:
         if(row):
@@ -17,7 +17,7 @@ with open('whole_power.csv') as csv_file:
 whole_p1, whole_p2, whole_p3, whole_p4 = float(array[0]), float(array[1]), float(array[2]), float(array[3]) 
 
 def insert_to_csv(data):
-    with open('whole_power.csv', mode='w') as csv_file:
+    with open(file, mode='w') as csv_file:
         csv_reader = csv.writer(csv_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         csv_reader.writerow(data)
         print("influxdb",data)
