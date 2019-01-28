@@ -10,7 +10,7 @@ client_db.switch_database('test_energy')
 #Callbacks
 try:
 	print("sleep 10 sec")
-	time.sleep(10)
+	time.sleep(30)
 	results = client_db.query(("SELECT * FROM %s GROUP BY * ORDER BY DESC LIMIT 1") % ('energy_monitor'))
 	print("success")
 	points = results.get_points()
