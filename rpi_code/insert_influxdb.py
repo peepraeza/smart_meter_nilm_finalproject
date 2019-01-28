@@ -4,7 +4,7 @@ from datetime import datetime
 import time
 import json
 import os
-
+import csv
 client_db = InfluxDBClient(host='localhost', port=8086, username='peepraeza', password='029064755')
 #client_db.create_database('test_energy')
 client_db.switch_database('test_energy')
