@@ -9,7 +9,7 @@ client_db = InfluxDBClient(host='localhost', port=8086, username='peepraeza', pa
 client_db.switch_database('test_energy')
 #Callbacks
 try:
-	results = client_influx.query(("SELECT * FROM %s GROUP BY * ORDER BY DESC LIMIT 1") % ('energy_monitor'))
+	results = client_db.query(("SELECT * FROM %s GROUP BY * ORDER BY DESC LIMIT 1") % ('energy_monitor'))
 	points = results.get_points()
 	for item in points:
 	    whole_p1 = item['whole_p1']
