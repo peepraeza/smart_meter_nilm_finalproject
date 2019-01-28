@@ -4,11 +4,13 @@ from datetime import datetime
 import time
 import json
 
-client_db = InfluxDBClient(host='localhost', port=8086, username='peepraeza', password='029064755')
+client_db = InfluxDBClient(host='192.168.0.105', port=8086, username='peepraeza', password='029064755')
 #client_db.create_database('test_energy')
 client_db.switch_database('test_energy')
 #Callbacks
 try:
+	print("sleep 10 sec")
+	time.sleep(10)
 	results = client_db.query(("SELECT * FROM %s GROUP BY * ORDER BY DESC LIMIT 1") % ('energy_monitor'))
 	points = results.get_points()
 	for item in points:
@@ -30,7 +32,7 @@ def on_message(client, userdata, msg):
 def insertdb(message):
     pieces = message.split(',')
     global whole_p1, whole_p2, whole_p3, whole_p4
-    if(pieces[0] == "START" and "END" in pieces[13]):
+    if(pieces[0] == "b'START" and "END" in pieces[13]):
         current_time = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
         p1_wh = float(pieces[5])/1800
         p2_wh = float(pieces[6])/1800
@@ -82,7 +84,7 @@ client = mqtt.Client()
 client.on_connect = on_connect
 client.on_message = on_message
 
-client.connect("localhost", 1883, 60)
+client.connect("192.168.0.105", 1883, 60)
 client.username_pw_set("peepraeza", "029064755")
 
 client.loop_forever();

@@ -14,6 +14,8 @@ time_reconnect = ""
 time_delay = 0
 i = 1
 #Callbacks
+print("sleep 15 sec")
+time.sleep(15)
 def on_connect(client, userdata, flags, rc):
     print("Connected with Code :"+ str(rc))
     # Subscribe Topic
