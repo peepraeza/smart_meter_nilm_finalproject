@@ -3,9 +3,7 @@ import paho.mqtt.client as mqtt
 from datetime import datetime
 import time
 import json
-import csv
-import os
-file = "/home/pi/Desktop/smart_meter_nilm_finalproject/rpi_code/whole_power.py"
+
 client_db = InfluxDBClient(host='localhost', port=8086, username='peepraeza', password='029064755')
 #client_db.create_database('test_energy')
 client_db.switch_database('test_energy')
@@ -21,12 +19,6 @@ try:
 except:
 	whole_p1, whole_p2, whole_p3, whole_p4 = 0,0,0,0
 
-def insert_to_csv(data):
-    with open(os.system(file), mode='w') as csv_file:
-        csv_reader = csv.writer(csv_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-        csv_reader.writerow(data)
-        print("influxdb",data)
-
 def on_connect(client, userdata, flags, rc):
     print("Connected with Code :"+ str(rc))
     # Subscribe Topic
@@ -37,7 +29,6 @@ def on_message(client, userdata, msg):
 
 def insertdb(message):
     pieces = message.split(',')
-    data = []
     global whole_p1, whole_p2, whole_p3, whole_p4
     if(pieces[0] == "START" and "END" in pieces[13]):
         current_time = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
@@ -49,11 +40,7 @@ def insertdb(message):
         whole_p2 += p2_wh
         whole_p3 += p3_wh
         whole_p4 += p4_wh
-        data.append(whole_p1)
-        data.append(whole_p2)
-        data.append(whole_p3)
-        data.append(whole_p4)
-        insert_to_csv(data)
+
         json_body = [
         {
             "measurement": "energy_monitor",
