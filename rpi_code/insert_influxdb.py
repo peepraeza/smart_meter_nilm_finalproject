@@ -12,6 +12,7 @@ try:
 	print("sleep 10 sec")
 	time.sleep(10)
 	results = client_db.query(("SELECT * FROM %s GROUP BY * ORDER BY DESC LIMIT 1") % ('energy_monitor'))
+	print("success")
 	points = results.get_points()
 	for item in points:
 	    whole_p1 = item['whole_p1']
@@ -19,6 +20,7 @@ try:
 	    whole_p3 = item['whole_p3']
 	    whole_p4 = item['whole_p4']
 except:
+	print("Unsuccess")
 	whole_p1, whole_p2, whole_p3, whole_p4 = 0,0,0,0
 
 def on_connect(client, userdata, flags, rc):
