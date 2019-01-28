@@ -45,8 +45,8 @@ def on_message(client, userdata, msg):
     insertdb(str(msg.payload))
 
 def insertdb(message):
-	data = []
     pieces = message.split(',')
+    data = []
     global whole_p1, whole_p2, whole_p3, whole_p4
     if(pieces[0] == "START" and "END" in pieces[13]):
         current_time = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
