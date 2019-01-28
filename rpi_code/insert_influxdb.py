@@ -4,6 +4,7 @@ from datetime import datetime
 import time
 import json
 import csv
+import os
 file = "/home/pi/Desktop/smart_meter_nilm_finalproject/rpi_code/whole_power.py"
 client_db = InfluxDBClient(host='localhost', port=8086, username='peepraeza', password='029064755')
 #client_db.create_database('test_energy')
