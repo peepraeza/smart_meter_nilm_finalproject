@@ -55,7 +55,7 @@ def insertdb(message):
             "S1": float(pieces[9]),
             "S2": float(pieces[10]),
             "S3": float(pieces[11]),
-            "S4": float(pieces[12])
+            "S4": float(pieces[12]),
             
             "whole_p1" : whole_p1,
             "whole_p2" : whole_p2,
