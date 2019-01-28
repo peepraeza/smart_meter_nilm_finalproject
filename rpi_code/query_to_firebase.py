@@ -12,6 +12,7 @@ status_connect = 0
 time_disconnect = ""
 time_reconnect = ""
 time_delay = 0
+i = 1
 #Callbacks
 def on_connect(client, userdata, flags, rc):
     print("Connected with Code :"+ str(rc))
@@ -22,14 +23,23 @@ def on_message(client, userdata, msg):
     insertdb(str(msg.payload))
 
 def insertdb(message):
-    global status_connect, time_disconnect, time_reconnect, time_delay
+    global status_connect, time_disconnect, time_reconnect, time_delay, i
     time_unix = int(time.time())
     time_now = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
     time_obj = parse(time_now)
     unixtime = (calendar.timegm(time_obj.timetuple()))
     pieces = message.split(',')
-    if(pieces[0] == "START" and "END" in pieces[13]):
-        firebases = firebase.FirebaseApplication("https://data-log-fb39d.firebaseio.com/")  
+    if(pieces[0] == "START" and "END" in pieces[13] and i == 4):
+        firebases = firebase.FirebaseApplication("https://data-log-fb39d.firebaseio.com/")
+        client_influx = InfluxDBClient(host='localhost', port=8086, username='peepraeza', password='029064755')
+        client_influx.switch_database('test_energy')
+        results = client_influx.query(("SELECT * FROM %s GROUP BY * ORDER BY DESC LIMIT 1") % ('energy_monitor'))
+        points = results.get_points()
+        for item in points:
+            whole_p1 = item['whole_p1']
+            whole_p2 = item['whole_p2']
+            whole_p3 = item['whole_p3']
+            whole_p4 = item['whole_p4']
         json_body = {
             "time": time_unix,
             "I1": float(pieces[1]),
@@ -45,14 +55,18 @@ def insertdb(message):
             "S1": float(pieces[9]),
             "S2": float(pieces[10]),
             "S3": float(pieces[11]),
-            "S4": float(pieces[12]),
+            "S4": float(pieces[12])
             
-            "Power" : float(pieces[5])/1800
+            "whole_p1" : whole_p1,
+            "whole_p2" : whole_p2,
+            "whole_p3" : whole_p3,
+            "whole_p4" : whole_p4,
             }
         time_start = int(time.time())
         try:
             firebases.post('/energy',json_body)
             print("firebase complete!", time_now)
+            i = 0
             if(status_connect == 1):
                 time_reconnect = int(time.time())
                 status_connect = 2
@@ -67,6 +81,7 @@ def insertdb(message):
         print(status_connect, time_end - time_start)
     else:
         print("Miss some data")
+        i += 1
 
 def backup_data():
     global status_connect, time_disconnect, time_reconnect, time_delay
