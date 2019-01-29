@@ -52,10 +52,10 @@ def insertdb(message):
             "P3": float(pieces[7]),
             "P4": float(pieces[8]),
 
-            "S1": float(pieces[9]),
-            "S2": float(pieces[10]),
-            "S3": float(pieces[11]),
-            "S4": float(pieces[12]),
+            "Q1": float(pieces[9]),
+            "Q2": float(pieces[10]),
+            "Q3": float(pieces[11]),
+            "Q4": float(pieces[12]),
             
             "whole_p1" : whole_p1,
             "whole_p2" : whole_p2,
@@ -104,7 +104,7 @@ def backup_data():
                 unixtime = (calendar.timegm(time_obj.timetuple()))
                 firebases.post('/energy',{"time":unixtime, 
                     "I1":item['I1'], "I2":item['I2'], "I3":item['I3'], "I4":item['I4'],
-                    "S1":item['S1'], "S2":item['S2'], "S3":item['S3'], "S4":item['S4'],
+                    "Q1":item['Q1'], "Q2":item['Q2'], "S3":item['Q3'], "Q4":item['Q4'],
                     "P1":item['P1'], "P2":item['P2'], "P3":item['P3'], "P4":item['P4'], "Power":item['Power']})
                 print(item['time'])
             time_end = int(time.time())

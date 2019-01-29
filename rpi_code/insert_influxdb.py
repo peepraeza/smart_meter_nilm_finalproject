@@ -79,10 +79,10 @@ def insertdb(message):
                 "P3": float(pieces[7]),
                 "P4": float(pieces[8]),
 
-                "S1": float(pieces[9]),
-                "S2": float(pieces[10]),
-                "S3": float(pieces[11]),
-                "S4": float(pieces[12]),
+                "Q1": float(pieces[9]),
+                "Q2": float(pieces[10]),
+                "Q3": float(pieces[11]),
+                "Q4": float(pieces[12]),
                 
                 "P1_wh" : p1_wh,
                 "P2_wh" : p2_wh,
