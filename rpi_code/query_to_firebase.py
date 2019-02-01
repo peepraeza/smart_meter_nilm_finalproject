@@ -12,7 +12,7 @@ status_connect = 0
 time_disconnect = ""
 time_reconnect = ""
 time_delay = 0
-i = 1
+
 #Callbacks
 def on_connect(client, userdata, flags, rc):
     print("Connected with Code :"+ str(rc))
@@ -23,23 +23,18 @@ def on_message(client, userdata, msg):
     insertdb(str(msg.payload))
 
 def insertdb(message):
-    global status_connect, time_disconnect, time_reconnect, time_delay, i
+    global status_connect, time_disconnect, time_reconnect, time_delay
     time_unix = int(time.time())
-    time_now = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
-    time_obj = parse(time_now)
-    unixtime = (calendar.timegm(time_obj.timetuple()))
+    # time_now = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
+    # time_obj = parse(time_now)
+    # unixtime = (calendar.timegm(time_obj.timetuple()))
     pieces = message.split(',')
-    if(pieces[0] == "START" and "END" in pieces[13] and i == 4):
+    if(pieces[0] == "START" and "END" in pieces[13]):
         firebases = firebase.FirebaseApplication("https://data-log-fb39d.firebaseio.com/")
-        client_influx = InfluxDBClient(host='localhost', port=8086, username='peepraeza', password='029064755')
-        client_influx.switch_database('test_energy')
-        results = client_influx.query(("SELECT * FROM %s GROUP BY * ORDER BY DESC LIMIT 1") % ('energy_monitor'))
-        points = results.get_points()
-        for item in points:
-            whole_p1 = item['whole_p1']
-            whole_p2 = item['whole_p2']
-            whole_p3 = item['whole_p3']
-            whole_p4 = item['whole_p4']
+        p1_wh = float(pieces[5])/1800
+        p2_wh = float(pieces[6])/1800
+        p3_wh = float(pieces[7])/1800
+        p4_wh = float(pieces[8])/1800
         json_body = {
             "time": time_unix,
             "I1": float(pieces[1]),
@@ -57,10 +52,10 @@ def insertdb(message):
             "Q3": float(pieces[11]),
             "Q4": float(pieces[12]),
             
-            "whole_p1" : whole_p1,
-            "whole_p2" : whole_p2,
-            "whole_p3" : whole_p3,
-            "whole_p4" : whole_p4,
+            "P1_wh" : p1_wh,
+            "P2_wh" : p2_wh,
+            "P3_wh" : p3_wh,
+            "P4_wh" : p4_wh,
             }
         time_start = int(time.time())
         try:
@@ -81,7 +76,6 @@ def insertdb(message):
         print(status_connect, time_end - time_start)
     else:
         print("Miss some data")
-        i += 1
 
 def backup_data():
     global status_connect, time_disconnect, time_reconnect, time_delay
