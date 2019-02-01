@@ -25,12 +25,13 @@ def on_message(client, userdata, msg):
 def insertdb(message):
     global status_connect, time_disconnect, time_reconnect, time_delay
     time_unix = int(time.time())
-    # time_now = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
+    time_now = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
     # time_obj = parse(time_now)
     # unixtime = (calendar.timegm(time_obj.timetuple()))
     pieces = message.split(',')
-    if(pieces[0] == "START" and "END" in pieces[13]):
+    if(pieces[0] == "b'START" and "END" in pieces[13]):
         firebases = firebase.FirebaseApplication("https://data-log-fb39d.firebaseio.com/")
+        print("COME")
         p1_wh = float(pieces[5])/1800
         p2_wh = float(pieces[6])/1800
         p3_wh = float(pieces[7])/1800
@@ -55,7 +56,7 @@ def insertdb(message):
             "P1_wh" : p1_wh,
             "P2_wh" : p2_wh,
             "P3_wh" : p3_wh,
-            "P4_wh" : p4_wh,
+            "P4_wh" : p4_wh
             }
         time_start = int(time.time())
         try:
@@ -119,7 +120,7 @@ client = mqtt.Client()
 client.on_connect = on_connect
 client.on_message = on_message
 
-client.connect("localhost", 1883, 60)
+client.connect("192.168.2.45", 1883, 60)
 client.username_pw_set("peepraeza", "029064755")
 
 client.loop_forever();
