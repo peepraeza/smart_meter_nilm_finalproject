@@ -29,9 +29,8 @@ def insertdb(message):
     # time_obj = parse(time_now)
     # unixtime = (calendar.timegm(time_obj.timetuple()))
     pieces = message.split(',')
-    if(pieces[0] == "b'START" and "END" in pieces[13]):
+    if(pieces[0] == "START" and "END" in pieces[13]):
         firebases = firebase.FirebaseApplication("https://data-log-fb39d.firebaseio.com/")
-        print("COME")
         p1_wh = float(pieces[5])/1800
         p2_wh = float(pieces[6])/1800
         p3_wh = float(pieces[7])/1800
