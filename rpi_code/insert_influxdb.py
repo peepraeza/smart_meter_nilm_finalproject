@@ -18,7 +18,7 @@ def on_message(client, userdata, msg):
 
 def insertdb(message):
     pieces = message.split(',')
-    if(pieces[0] == "START" and "END" in pieces[13]):
+    if(pieces[0] == "START" and "END" in pieces[17]):
         current_time = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
         p1_wh = float(pieces[5])/1800
         p2_wh = float(pieces[6])/1800
@@ -44,6 +44,11 @@ def insertdb(message):
                 "Q2": float(pieces[10]),
                 "Q3": float(pieces[11]),
                 "Q4": float(pieces[12]),
+
+                "S1": float(pieces[13]),
+                "S2": float(pieces[14]),
+                "S3": float(pieces[15]),
+                "S4": float(pieces[16]),
                 
                 "P1_wh" : p1_wh,
                 "P2_wh" : p2_wh,

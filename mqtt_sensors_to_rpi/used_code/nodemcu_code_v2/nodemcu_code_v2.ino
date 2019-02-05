@@ -8,7 +8,7 @@
 #include <EEPROM.h>
 SoftwareSerial NodeSerial(D5,D6); // RX | TX
 
-#define button D0
+#define button D0 
 #define ConfigWiFi_Pin button
 #define ESP_AP_NAME "NodeMCU Config WiFi"
 
@@ -183,8 +183,9 @@ void loop() {
     while (NodeSerial.available()) {
       char c = NodeSerial.read();  //gets one byte from serial buffer
       readString += c; //makes the String readString
-      delay(2);  //slow looping to allow buffer to fill with next character
+      delay(5);  //slow looping to allow buffer to fill with next character
     }
+    Serial.println("receive "+readString);
     if (readString.length() >0){  
       int length = readString.length()+1;
       char send_data[length];
@@ -196,7 +197,7 @@ void loop() {
       
       client.loop();
     }
-    delay(2000);
+//    delay(5000);
   } 
   
 }

@@ -57,7 +57,7 @@ void loop() {
   data += ","+String(abs(realPower1))+","+String(abs(realPower2))+","+String(abs(realPower3))+","+String(abs(realPower4));
   data += ","+String(abs(reactivePower1))+","+String(abs(reactivePower2))+","+String(abs(reactivePower3))+","+String(abs(reactivePower4));
   data += ","+String(abs(apparentPower1))+","+String(abs(apparentPower2))+","+String(abs(apparentPower3))+","+String(abs(apparentPower4));
-  data += ","+String(abs(pf1))+","+String(abs(pf2))+","+String(abs(pf3))+","+String(abs(pf4));
+//  data += ","+String(pf1)+","+String(pf2)+","+String(pf3)+","+String(pf4);
   data += ",END";
                             
   Serial.print(data); 
@@ -69,7 +69,7 @@ void loop() {
   
   NanoSerial.print(send_data); 
   digitalWrite(LED_BUILTIN, HIGH); // LED ON When data sent
-  delay(500);
+  delay(5000);
   digitalWrite(LED_BUILTIN, LOW); // LED OFF When data no sent
 
 }
