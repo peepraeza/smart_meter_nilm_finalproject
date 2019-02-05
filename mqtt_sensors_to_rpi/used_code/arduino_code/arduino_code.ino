@@ -42,6 +42,11 @@ void loop() {
   float reactivePower2   = sqrt((apparentPower2*apparentPower2) - (realPower2*realPower2));
   float reactivePower3   = sqrt((apparentPower3*apparentPower3) - (realPower3*realPower3));
   float reactivePower4   = sqrt((apparentPower4*apparentPower4) - (realPower4*realPower4));
+
+  float pf1 = emon1.powerFactor;
+  float pf2 = emon2.powerFactor;
+  float pf3 = emon3.powerFactor;
+  float pf4 = emon4.powerFactor;
   
   float Irms1            = emon1.Irms;             //extract Irms into Variable
   float Irms2            = emon2.Irms;             
@@ -51,6 +56,8 @@ void loop() {
   data = "START,"+String(Irms1)+","+String(Irms2)+","+String(Irms3)+","+String(Irms4);
   data += ","+String(abs(realPower1))+","+String(abs(realPower2))+","+String(abs(realPower3))+","+String(abs(realPower4));
   data += ","+String(abs(reactivePower1))+","+String(abs(reactivePower2))+","+String(abs(reactivePower3))+","+String(abs(reactivePower4));
+  data += ","+String(abs(apparentPower1))+","+String(abs(apparentPower2))+","+String(abs(apparentPower3))+","+String(abs(apparentPower4));
+  data += ","+String(abs(pf1))+","+String(abs(pf2))+","+String(abs(pf3))+","+String(abs(pf4));
   data += ",END";
                             
   Serial.print(data); 
