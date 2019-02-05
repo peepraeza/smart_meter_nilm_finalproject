@@ -29,7 +29,7 @@ def insertdb(message):
     # time_obj = parse(time_now)
     # unixtime = (calendar.timegm(time_obj.timetuple()))
     pieces = message.split(',')
-    if(pieces[0] == "START" and "END" in pieces[17]):
+    if(pieces[0] == "START" and "END" in pieces[18]):
         firebases = firebase.FirebaseApplication("https://data-log-fb39d.firebaseio.com/")
         p1_wh = float(pieces[5])/1800
         p2_wh = float(pieces[6])/1800
@@ -56,6 +56,8 @@ def insertdb(message):
             "S2": float(pieces[14]),
             "S3": float(pieces[15]),
             "S4": float(pieces[16]),
+
+            "PF1":abs(float(pieces[17])),
             
             "P1_wh" : p1_wh,
             "P2_wh" : p2_wh,
@@ -105,7 +107,7 @@ def backup_data():
                     "I1":item['I1'], "I2":item['I2'], "I3":item['I3'], "I4":item['I4'],
                     "Q1":item['Q1'], "Q2":item['Q2'], "S3":item['Q3'], "Q4":item['Q4'],
                     "P1":item['P1'], "P2":item['P2'], "P3":item['P3'], "P4":item['P4'],
-                    "S1":item['S1'], "S2":item['S2'], "S3":item['S3'], "S4":item['S4'],
+                    "S1":item['S1'], "S2":item['S2'], "S3":item['S3'], "S4":item['S4'], "PF1":item['PF1'], 
                     "P1_wh":item['P1_wh'], "P2_wh":item['P2_wh'], "P3_wh":item['P3_wh'], "P4_wh":item['P4_wh'],})
                 print(item['time'])
             time_end = int(time.time())
